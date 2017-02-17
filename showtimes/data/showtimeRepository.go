@@ -30,8 +30,8 @@ func (r *ShowTimeRepository) GetAll() []models.ShowTime {
 	return showtimes
 }
 
-func (r *ShowTimeRepository) GetByDate(date string) (showtime models.ShowTime, err error) {
-	err = r.C.Find(bson.M{"date": date}).One(&showtime)
+func (r *ShowTimeRepository) GetById(id string) (showtime models.ShowTime, err error) {
+	err = r.C.FindId(bson.ObjectIdHex(id)).One(&showtime)
 	return
 }
 

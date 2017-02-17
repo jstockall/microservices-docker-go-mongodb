@@ -61,10 +61,10 @@ func CreateShowTime(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-func GetShowTimeByDate(w http.ResponseWriter, r *http.Request) {
-	// Get date from incoming url
+func GetShowTimeById(w http.ResponseWriter, r *http.Request) {
+	// Get id from incoming url
 	vars := mux.Vars(r)
-	date := vars["date"]
+	id := vars["id"]
 
 	// Create new context
 	context := NewContext()
@@ -73,7 +73,7 @@ func GetShowTimeByDate(w http.ResponseWriter, r *http.Request) {
 	repo := &data.ShowTimeRepository{c}
 
 	// Get showtime by date
-	showtime, err := repo.GetByDate(date)
+	showtime, err := repo.GetById(id)
 	if err != nil {
 		common.DisplayAppError(w, err, "An unexpected error has occurred", 500)
 		return
