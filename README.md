@@ -20,7 +20,8 @@ The Cinema use case is based on the project written in Python by [Umer Mansoor](
 
 The project structure is based in the knowledge learned in the book: Web Development with Go by Shiju Varghese, ISBN 978-1-4842-1053-6
 
-[Full multilanguage documentation with screenshots here.](http://mmorejon.github.io/en/blog/microservices-example-with-docker-go-and-mongodb/)
+# Services Diagram
+![services diagram](https://github.com/jstockall/microservices-docker-django/blob/master/microservices-docker-django.png)
 
 Requirements
 ===========
@@ -158,4 +159,4 @@ Used to lookup booking information for users.
 * [Web Development with Go](http://www.apress.com/9781484210536)
 * [Umer Mansoor - Cinema](https://github.com/umermansoor/microservices)
 * [Local docker development with virtual hosts](https://coderwall.com/p/qknu2g/local-docker-development-with-virtual-hosts)
-* [Automated Nginx Reverse Proxy for Docker by Jason Wilder](https://github.com/jwilder/nginx-proxy).
+* [Automated Nginx Reverse Proxy for Docker by Jason Wilder](https://github.com/jwilder/nginx-proxy)

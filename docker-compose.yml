@@ -10,7 +10,7 @@ services:
 
   movies:
     build: ./movies
-    image: cinema/movies
+    image: stockallj/cinema-movies
     container_name: cinema-movies
     depends_on:
       - db
@@ -22,7 +22,7 @@ services:
 
   bookings:
     build: ./bookings
-    image: cinema/bookings
+    image: stockallj/cinema-bookings
     container_name: cinema-bookings
     depends_on:
       - db
@@ -34,7 +34,7 @@ services:
 
   showtimes:
     build: ./showtimes
-    image: cinema/showtimes
+    image: stockallj/cinema-showtimes
     container_name: cinema-showtimes
     depends_on:
       - db
@@ -46,7 +46,7 @@ services:
 
   users:
     build: ./users
-    image: cinema/users
+    image: stockallj/cinema-users
     container_name: cinema-users
     depends_on:
       - db
