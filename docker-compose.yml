@@ -18,7 +18,7 @@ services:
     links:
       - db
     environment:
-      VIRTUAL_HOST: movies.local
+      VIRTUAL_HOST: movies.dev
 
   bookings:
     build: ./bookings
@@ -30,7 +30,7 @@ services:
     links:
       - db
     environment:
-      VIRTUAL_HOST: bookings.local
+      VIRTUAL_HOST: bookings.dev
 
   showtimes:
     build: ./showtimes
@@ -42,7 +42,7 @@ services:
     links:
       - db
     environment:
-      VIRTUAL_HOST: showtimes.local
+      VIRTUAL_HOST: showtimes.dev
 
   users:
     build: ./users
@@ -54,7 +54,7 @@ services:
     links:
       - db
     environment:
-      VIRTUAL_HOST: users.local
+      VIRTUAL_HOST: users.dev
 
   db:
     image: mongo:3.3
