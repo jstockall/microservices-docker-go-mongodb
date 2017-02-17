@@ -1,5 +1,5 @@
 # Cinema - Example of Microservices in Go with Docker and MongoDB
-* Forked from mmorejon/microservices-docker-go-mongodb
+* Forked from [mmorejon/microservices-docker-go-mongodb](https://github.com/mmorejon/microservices-docker-go-mongodb)
 * Changelog:
   * Switch to .dev domain name suffix for use with existing dnsmasq resolver as described in [Local docker development with virtual hosts](https://coderwall.com/p/qknu2g/local-docker-development-with-virtual-hosts)
   * Fix some movie IDs in the bookings and showtimes sample data (backup/*.bson)
