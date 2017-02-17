@@ -89,3 +89,39 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	// Send response back
 	w.WriteHeader(http.StatusNoContent)
 }
+
+// Handler for HTTP Get - "/users/{id}"
+// Get user by id
+func GetUserById(w http.ResponseWriter, r *http.Request) {
+	// Get id from incoming url
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	// create new context
+	context := NewContext()
+	defer context.Close()
+	c := context.DbCollection("users")
+	repo := &data.UserRepository{c}
+
+	// Get user by id
+	user, err := repo.GetById(id)
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		} else {
+			common.DisplayAppError(w, err, "An unexpected error has occurred", 500)
+			return
+		}
+	}
+
+	j, err := json.Marshal(UserResource{Data: user})
+	if err != nil {
+		common.DisplayAppError(w, err, "An unexpected error has occurred", 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(j)
+}

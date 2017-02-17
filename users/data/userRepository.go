@@ -31,3 +31,8 @@ func (r *UserRepository) Delete(id string) error {
 	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
 	return err
 }
+
+func (r *UserRepository) GetById(id string) (user models.User, err error) {
+	err = r.C.FindId(bson.ObjectIdHex(id)).One(&user)
+	return
+}

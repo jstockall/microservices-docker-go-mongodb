@@ -8,5 +8,6 @@ import (
 func SetBookingsRouters(router *mux.Router) *mux.Router {
 	router.HandleFunc("/bookings", controllers.GetBookings).Methods("GET")
 	router.HandleFunc("/bookings", controllers.CreateBooking).Methods("POST")
+	router.HandleFunc("/bookings/{id}", controllers.GetBookingById).Methods("GET")
 	return router
 }

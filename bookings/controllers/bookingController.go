@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/mmorejon/cinema/bookings/common"
 	"github.com/mmorejon/cinema/bookings/data"
+	"gopkg.in/mgo.v2"
 )
 
 // Handler for HTTP Post - "/bookins"
@@ -53,6 +55,42 @@ func GetBookings(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Send response back
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(j)
+}
+
+// Handler for HTTP Get - "/bookings/{id}"
+// Get movie by id
+func GetBookingById(w http.ResponseWriter, r *http.Request) {
+	// Get id from incoming url
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	// create new context
+	context := NewContext()
+	defer context.Close()
+	c := context.DbCollection("bookings")
+	repo := &data.BookingRepository{c}
+
+	// Get booking by id
+	booking, err := repo.GetById(id)
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		} else {
+			common.DisplayAppError(w, err, "An unexpected error has occurred", 500)
+			return
+		}
+	}
+
+	j, err := json.Marshal(BookingResource{Data: booking})
+	if err != nil {
+		common.DisplayAppError(w, err, "An unexpected error has occurred", 500)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(j)

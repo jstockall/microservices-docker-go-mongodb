@@ -31,3 +31,8 @@ func (r *BookingRepository) Delete(id string) error {
 	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
 	return err
 }
+
+func (r *BookingRepository) GetById(id string) (booking models.Booking, err error) {
+	err = r.C.FindId(bson.ObjectIdHex(id)).One(&booking)
+	return
+}
