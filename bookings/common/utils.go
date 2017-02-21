@@ -54,6 +54,11 @@ func initConfig() {
 	if err != nil {
 		log.Fatalf("[logAppConfig]: %s\n", err)
 	}
+	dbHost := os.Getenv("DATABASE_HOST")
+	if dbHost != "" {
+		log.Printf("Setting DB host to " + dbHost)
+		AppConfig.MongoDBHost = dbHost
+	}
 }
 
 // Session holds the mongodb session for database access

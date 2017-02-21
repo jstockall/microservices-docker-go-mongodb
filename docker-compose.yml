@@ -19,6 +19,7 @@ services:
       - db
     environment:
       VIRTUAL_HOST: movies.dev
+      DATABASE_HOST: db
 
   bookings:
     build: ./bookings
@@ -31,6 +32,7 @@ services:
       - db
     environment:
       VIRTUAL_HOST: bookings.dev
+      DATABASE_HOST: db
 
   showtimes:
     build: ./showtimes
@@ -43,6 +45,7 @@ services:
       - db
     environment:
       VIRTUAL_HOST: showtimes.dev
+      DATABASE_HOST: db
 
   users:
     build: ./users
@@ -55,6 +58,7 @@ services:
       - db
     environment:
       VIRTUAL_HOST: users.dev
+      DATABASE_HOST: db
 
   db:
     image: mongo:3.3
