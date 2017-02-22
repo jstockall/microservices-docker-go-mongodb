@@ -1,0 +1,177 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  labels:
+    app: database
+spec:
+  ports:
+  - port: 27017
+    protocol: TCP
+  selector:
+    app: database
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cinema-db
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+        - name: db
+          image: mongo:3.3
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /backup
+            name: backup
+      volumes:
+        - name: backup
+        gitRepo:
+          repository: "https://github.com/jstockall/microservices-docker-go-mongodb.git"
+          revision: "c899da2b696c5026899f747e8490fbaefd1bbad5"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: movies
+  labels:
+    app: movies
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: movies
+  type: ClusterIP
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: movies
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: movies
+    spec:
+      containers:
+        - name: movies
+          image: stockallj/cinema-movies
+          env:
+            - name: DATABASE_HOST
+              value: db
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users
+  labels:
+    app: users
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: users
+  type: ClusterIP
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: users
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: users
+    spec:
+      containers:
+        - name: users
+          image: stockallj/cinema-users
+          env:
+            - name: DATABASE_HOST
+              value: db
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bookings
+  labels:
+    app: bookings
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: bookings
+  type: ClusterIP
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: bookings
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: bookings
+    spec:
+      containers:
+        - name: bookings
+          image: stockallj/cinema-bookings
+          env:
+            - name: DATABASE_HOST
+              value: db
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: showtimes
+  labels:
+    app: showtimes
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: showtimes
+  type: ClusterIP
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: showtimes
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: showtimes
+    spec:
+      containers:
+        - name: showtimes
+          image: stockallj/cinema-showtimes
+          env:
+            - name: DATABASE_HOST
+              value: db
+          ports:
+            - containerPort: 8080
