@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: db
+  namespace: cinema
   labels:
     app: database
 spec:
@@ -14,7 +15,8 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: cinema-db
+  name: db
+  namespace: cinema
 spec:
   replicas: 1
   template:
@@ -28,10 +30,10 @@ spec:
           ports:
             - containerPort: 27017
           volumeMounts:
-            - mountPath: /backup
+          - mountPath: /backup
             name: backup
       volumes:
-        - name: backup
+      - name: backup
         gitRepo:
           repository: "https://github.com/jstockall/microservices-docker-go-mongodb.git"
           revision: "c899da2b696c5026899f747e8490fbaefd1bbad5"
@@ -40,6 +42,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: movies
+  namespace: cinema
   labels:
     app: movies
 spec:
@@ -55,6 +58,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: movies
+  namespace: cinema
 spec:
   replicas: 1
   template:
@@ -75,6 +79,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: users
+  namespace: cinema
   labels:
     app: users
 spec:
@@ -90,6 +95,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: users
+  namespace: cinema
 spec:
   replicas: 1
   template:
@@ -110,6 +116,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: bookings
+  namespace: cinema
   labels:
     app: bookings
 spec:
@@ -125,6 +132,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: bookings
+  namespace: cinema
 spec:
   replicas: 1
   template:
@@ -145,6 +153,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: showtimes
+  namespace: cinema
   labels:
     app: showtimes
 spec:
@@ -160,6 +169,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: showtimes
+  namespace: cinema
 spec:
   replicas: 1
   template:
