@@ -35,6 +35,16 @@ func (r *ShowTimeRepository) GetById(id string) (showtime models.ShowTime, err e
 	return
 }
 
+func (r *ShowTimeRepository) GetByMovie(id string) []models.ShowTime {
+	var showtimes []models.ShowTime
+	iter := r.C.Find(bson.M{ "movies": id}).Iter()
+	result := models.ShowTime{}
+	for iter.Next(&result) {
+		showtimes = append(showtimes, result)
+	}
+	return showtimes
+}
+
 func (r *ShowTimeRepository) Delete(id string) error {
 	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
 	return err

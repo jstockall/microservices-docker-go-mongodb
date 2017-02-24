@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/mmorejon/cinema/showtimes/common"
 	"github.com/mmorejon/cinema/showtimes/data"
+	"github.com/mmorejon/cinema/showtimes/models"
 	"gopkg.in/mgo.v2"
 )
 
@@ -18,8 +19,18 @@ func GetShowTimes(w http.ResponseWriter, r *http.Request) {
 	defer context.Close()
 	c := context.DbCollection("showtimes")
 	repo := &data.ShowTimeRepository{c}
-	// Get all showtimes form repository
-	showtimes := repo.GetAll()
+
+	query := r.URL.Query()
+	movie := query["movie"]
+	var showtimes []models.ShowTime
+	if len(movie) == 0 {
+		// Get all showtimes form repository
+		showtimes = repo.GetAll()
+	} else {
+		// Filter by movie
+		showtimes = repo.GetByMovie(movie[0])
+	}
+
 	j, err := json.Marshal(ShowTimesResource{Data: showtimes})
 	if err != nil {
 		common.DisplayAppError(w, err, "An unexpected error has occurred", 500)
