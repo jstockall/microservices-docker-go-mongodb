@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/mmorejon/cinema/bookings/common"
 	"github.com/mmorejon/cinema/bookings/data"
+	"github.com/mmorejon/cinema/bookings/models"
 	"gopkg.in/mgo.v2"
 )
 
@@ -46,8 +47,24 @@ func GetBookings(w http.ResponseWriter, r *http.Request) {
 	defer context.Close()
 	c := context.DbCollection("bookings")
 	repo := &data.BookingRepository{c}
-	// Get all bookings
-	bookings := repo.GetAll()
+
+	query := r.URL.Query()
+	user := query["user"]
+	movie := query["movie"]
+	var bookings []models.Booking
+	if len(user) == 0 {
+		if len(movie) == 0 {
+			// Get all bookings from repository
+			bookings = repo.GetAll()
+		} else {
+			// Filter by movie
+			bookings = repo.GetByMovie(movie[0])
+		}
+	} else {
+		// Filter by user
+		bookings = repo.GetByUser(user[0])
+	}
+
 	// Create response data
 	j, err := json.Marshal(BookingsResource{Data: bookings})
 	if err != nil {

@@ -27,6 +27,26 @@ func (r *BookingRepository) GetAll() []models.Booking {
 	return bookings
 }
 
+func (r *BookingRepository) GetByUser(id string) []models.Booking {
+	var bookings []models.Booking
+	iter := r.C.Find(bson.M{ "userid": id}).Iter()
+	result := models.Booking{}
+	for iter.Next(&result) {
+		bookings = append(bookings, result)
+	}
+	return bookings
+}
+
+func (r *BookingRepository) GetByMovie(id string) []models.Booking {
+	var bookings []models.Booking
+	iter := r.C.Find(bson.M{ "movieid": id}).Iter()
+	result := models.Booking{}
+	for iter.Next(&result) {
+		bookings = append(bookings, result)
+	}
+	return bookings
+}
+
 func (r *BookingRepository) Delete(id string) error {
 	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
 	return err

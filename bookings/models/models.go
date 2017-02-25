@@ -9,6 +9,6 @@ type (
 		Id         bson.ObjectId `bson:"_id,omitempty" json:"id"`
 		UserId     string        `json:"userid"`
 		ShowtimeId string        `json:"showtimeid"`
-		Movies     []string      `json:"movies"`
+		MovieId    string      	 `json:"movieid"`
 	}
 )
