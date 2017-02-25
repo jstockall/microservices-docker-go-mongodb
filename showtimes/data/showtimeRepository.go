@@ -20,6 +20,11 @@ func (r *ShowTimeRepository) Create(showtime *models.ShowTime) error {
 	return err
 }
 
+func (r *ShowTimeRepository) Update(showtime *models.ShowTime) error {
+	err := r.C.Update(bson.M{ "_id": showtime.Id}, &showtime)
+	return err
+}
+
 func (r *ShowTimeRepository) GetAll() []models.ShowTime {
 	var showtimes []models.ShowTime
 	iter := r.C.Find(nil).Iter()
