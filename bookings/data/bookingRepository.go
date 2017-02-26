@@ -27,19 +27,9 @@ func (r *BookingRepository) GetAll() []models.Booking {
 	return bookings
 }
 
-func (r *BookingRepository) GetByUser(id string) []models.Booking {
+func (r *BookingRepository) GetBy(key string, value string) []models.Booking {
 	var bookings []models.Booking
-	iter := r.C.Find(bson.M{ "userid": id}).Iter()
-	result := models.Booking{}
-	for iter.Next(&result) {
-		bookings = append(bookings, result)
-	}
-	return bookings
-}
-
-func (r *BookingRepository) GetByMovie(id string) []models.Booking {
-	var bookings []models.Booking
-	iter := r.C.Find(bson.M{ "movieid": id}).Iter()
+	iter := r.C.Find(bson.M{ key:value}).Iter()
 	result := models.Booking{}
 	for iter.Next(&result) {
 		bookings = append(bookings, result)

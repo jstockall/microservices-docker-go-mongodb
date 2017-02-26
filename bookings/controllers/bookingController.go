@@ -49,20 +49,15 @@ func GetBookings(w http.ResponseWriter, r *http.Request) {
 	repo := &data.BookingRepository{c}
 
 	query := r.URL.Query()
-	user := query["user"]
-	movie := query["movie"]
 	var bookings []models.Booking
-	if len(user) == 0 {
-		if len(movie) == 0 {
-			// Get all bookings from repository
-			bookings = repo.GetAll()
-		} else {
-			// Filter by movie
-			bookings = repo.GetByMovie(movie[0])
-		}
+	if len(query["user"]) != 0 {
+		bookings = repo.GetBy("userid", query["user"][0])
+	} else if len(query["movie"]) != 0 {
+		bookings = repo.GetBy("movieid", query["movie"][0])
+	} else if len(query["showtime"]) != 0 {
+		bookings = repo.GetBy("showtimeid", query["showtime"][0])
 	} else {
-		// Filter by user
-		bookings = repo.GetByUser(user[0])
+		bookings = repo.GetAll()
 	}
 
 	// Create response data
@@ -111,4 +106,33 @@ func GetBookingById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(j)
+}
+
+// Handler for HTTP Delete - "/bookings/{id}"
+// Delete a Booking document by id
+func DeleteBooking(w http.ResponseWriter, r *http.Request) {
+	// Get id from incoming url
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	// Create new context
+	context := NewContext()
+	defer context.Close()
+	c := context.DbCollection("bookings")
+
+	// Remove showtime by id
+	repo := &data.BookingRepository{c}
+	err := repo.Delete(id)
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		} else {
+			common.DisplayAppError(w, err, "An unexpected error has occurred", 500)
+			return
+		}
+	}
+
+	// Send response back
+	w.WriteHeader(http.StatusNoContent)
 }
