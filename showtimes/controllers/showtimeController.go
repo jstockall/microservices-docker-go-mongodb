@@ -121,7 +121,7 @@ func DeleteShowTime(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		} else {
-			common.DisplayAppError(w, err, "An unexpected error ahs occurred", 500)
+			common.DisplayAppError(w, err, "An unexpected error has occurred", 500)
 			return
 		}
 	}
