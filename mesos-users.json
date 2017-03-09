@@ -17,10 +17,22 @@
           ]
       }
     },
-    "acceptedResourceRoles": ["slave_public"],
+    "acceptedResourceRoles": ["*"],
     "instances": 1,
     "cpus": 0.25,
     "mem": 512,
     "disk": 0,
-    "env": { "DATABASE_HOST":"db.marathon.l4lb.thisdcos.directory" }
+    "env": { "DATABASE_HOST":"db.marathon.l4lb.thisdcos.directory" },
+    "dependencies": [
+      "/cinema/db"
+    ],
+    "healthChecks": [{
+        "protocol": "HTTP",
+        "path": "/users",
+        "portIndex": 0,
+        "timeoutSeconds": 2,
+        "gracePeriodSeconds": 15,
+        "intervalSeconds": 3,
+        "maxConsecutiveFailures": 2
+    }]
 }
