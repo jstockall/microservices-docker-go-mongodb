@@ -60,10 +60,26 @@ services:
       VIRTUAL_HOST: users.dev
       DATABASE_HOST: db
 
+  backup:
+    build: ./backup
+    image: stockallj/cinema-backup
+    container_name: cinema-backup
+    depends_on:
+      - db
+      - proxy
+    links:
+      - db
+    volumes:
+      - ./backup:/backup:rw
+    environment:
+      VIRTUAL_HOST: backup.dev
+      DATABASE_HOST: db
+
   db:
     image: mongo:3.3
     container_name: cinema-db
     ports:
       - "27017:27017"
-    volumes:
-      - ./backup:/backup:rw
+    extra_hosts:
+     # The backup and restore scripts use as the hostname
+    - "db:127.0.0.1"
