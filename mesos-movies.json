@@ -1,0 +1,26 @@
+{
+    "id": "cinema/movies",
+    "container": {
+      "type": "DOCKER",
+      "docker": {
+          "image": "stockallj/cinema-movies:201702270850",
+          "network": "BRIDGE",
+          "portMappings": [
+            {
+              "protocol": "tcp",
+              "containerPort": 8080,
+              "labels": {
+                "VIP_0": "/movies:80"
+              },
+              "name": "movies-vip"
+            }
+          ]
+      }
+    },
+    "acceptedResourceRoles": ["slave_public"],
+    "instances": 1,
+    "cpus": 0.25,
+    "mem": 512,
+    "disk": 0,
+    "env": { "DATABASE_HOST":"db.marathon.l4lb.thisdcos.directory" }
+}

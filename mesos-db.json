@@ -1,0 +1,25 @@
+{
+    "id": "cinema/db",
+    "container": {
+      "type": "DOCKER",
+      "docker": {
+          "image": "mongo:3.3",
+          "network": "BRIDGE",
+          "portMappings": [
+            {
+              "protocol": "tcp",
+              "containerPort": 27017,
+              "labels": {
+                "VIP_0": "/db:27017"
+              },
+              "name": "db-vip"
+            }
+          ]
+      }
+    },
+    "acceptedResourceRoles": ["slave_public"],
+    "instances": 1,
+    "cpus": 0.5,
+    "mem": 1024,
+    "disk": 2048
+}
