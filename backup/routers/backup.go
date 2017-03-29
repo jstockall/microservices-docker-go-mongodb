@@ -6,6 +6,7 @@ import (
 )
 
 func SetBackupRouters(router *mux.Router) *mux.Router {
+	router.HandleFunc("/", controllers.Health).Methods("GET")
 	router.HandleFunc("/backup", controllers.Backup).Methods("POST")
 	router.HandleFunc("/restore", controllers.Restore).Methods("POST")
 	return router

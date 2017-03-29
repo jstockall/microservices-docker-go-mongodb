@@ -10,6 +10,21 @@ import (
 	"github.com/mmorejon/cinema/backup/common"
 )
 
+// Handler for HTTP Get - "/"
+func Health(w http.ResponseWriter, r *http.Request) {
+	// Create response data
+	j, err := json.Marshal("Post to /backup or /restore")
+	if err != nil {
+		common.DisplayAppError(w, err, "An unexpected error has occurred", 500)
+		return
+	}
+
+	// Send response back
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(j)
+}
+
 // Handler for HTTP Post - "/backup"
 func Backup(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Begin Backup\n")
