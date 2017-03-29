@@ -54,7 +54,7 @@ or setup dnsmasq with [Local docker development with virtual hosts](https://code
 * Create a namespace for the app *kubectl create namespace cinema*
 * Deploy the services *kubectl create -f k8s.yaml --namespace=cinema --record*
 * (Optional) Load database with sample data
-  * Exec to one of the nodes *kubectl exec <pod name> -i -t -- bash -il*
+  * Exec to one of the nodes *kubectl exec <pod name> --namespace=cinema -i -t -- bash -il*
   * Restore the database *curl -X POST backup/restore*
   * Verify the services
     * *curl movies/movies*
