@@ -1,10 +1,3 @@
-# Cinema - Example of Microservices in Go with Docker and MongoDB
-* Forked from [mmorejon/microservices-docker-go-mongodb](https://github.com/mmorejon/microservices-docker-go-mongodb)
-* Changelog:
-  * Switch to .dev domain name suffix for use with existing dnsmasq resolver as described in [Local docker development with virtual hosts](https://coderwall.com/p/qknu2g/local-docker-development-with-virtual-hosts)
-  * Fix some movie IDs in the bookings and showtimes sample data (backup/*.bson)
-  * Add URL handlers for /path/{id} for all objects
-
 Overview
 ========
 
@@ -16,10 +9,6 @@ The Cinema backend is powered by 4 microservices, all of witch happen to be writ
  * Booking Service: Provides booking information.
  * Users Service: Provides movie suggestions for users by communicating with other services.
 
-The Cinema use case is based on the project written in Python by [Umer Mansoor](https://github.com/umermansoor/microservices).
-
-The project structure is based in the knowledge learned in the book: Web Development with Go by Shiju Varghese, ISBN 978-1-4842-1053-6
-
 # Services Diagram
 ![services diagram](https://github.com/jstockall/microservices-docker-django/blob/master/microservices-docker-django.png)
 
@@ -28,7 +17,19 @@ Requirements
 
 * Docker 1.12
 * Docker Compose 1.8
+* (Optional) Docker Hub account and Kubernetes or Mesos DC/OS
 
+
+Build the images
+==============================
+```
+docker-compose build
+```
+
+Deploying the services (Docker, Kubernetes or Mesos DC/OS)
+==============================
+
+## Docker Compose
 We're using docker virtual domains to access each service behind the ngnix reverse proxy [from Jason Wilder (Automated Nginx Reverse Proxy for Docker)](https://github.com/jwilder/nginx-proxy).
 We must setup our local DNS resolver in order to access each **api entry point**. **Virtual domains** have been defined in `docker-compose.yml` file as: **movies.dev**, **bookings.dev**, **users.dev** and **showtimes.dev**
 
@@ -38,28 +39,43 @@ To setup local DNS resolution add Add the following line in your `/etc/hosts` fi
 ```
 or setup dnsmasq with [Local docker development with virtual hosts](https://coderwall.com/p/qknu2g/local-docker-development-with-virtual-hosts)
 
-Starting services
-==============================
+* Start the services with *docker-compose up*
+* (Optional) Load database with sample data
+* Restore the database *curl -X POST backup.dev/restore*
+* Verify the services
+  * *curl movies.dev/movies*
+  * *curl users.dev/users*
+  * *curl showtimes.dev/showtimes*
+  * *curl bookings.dev/bookings*
 
-```
-docker-compose up -d
-```
+## Kubernetes
+* Set your kubernetes context
+ * *kubectl config use-context my-context*
+* Create a namespace for the app *kubectl create namespace cinema*
+* Deploy the services *kubectl create -f k8s.yaml --namespace=cinema --record*
+* (Optional) Load database with sample data
+  * Exec to one of the nodes *kubectl exec <pod name> -i -t -- bash -il*
+  * Restore the database *curl -X POST backup/restore*
+  * Verify the services
+    * *curl movies/movies*
+    * *curl users/users*
+    * *curl showtimes/showtimes*
+    * *curl bookings/bookings*
 
-Stoping services
-==============================
 
-```
-docker-compose stop
-```
+## Mesos DC/OS
+* Set your dcos config *dcos config set core.dcos_url $MASTER*
+* Deploy the services as a group *dcos marathon group add mesos.json*
+* Alternatively you can install them one by one *dcos marathon app add mesos-db.json* (repeat for each application definition in of the service directories)
+* (Optional) Load database with sample data
+  * SSH to the master node *dcos node ssh --master-proxy --leader*
+  * Restore the database *curl -X POST backup.marathon.l4lb.thisdcos.directory/restore*
+  * Verify the services
+    * *curl movies.marathon.l4lb.thisdcos.directory/movies*
+    * *curl users.marathon.l4lb.thisdcos.directory/users*
+    * *curl showtimes.marathon.l4lb.thisdcos.directory/showtimes*
+    * *curl bookings.marathon.l4lb.thisdcos.directory/bookings*
 
-Including new changes
-==============================
-
-If you need change some source code you can deploy it typing:
-
-```
-docker-compose build
-```
 
 Restore database information
 ======================
@@ -152,6 +168,15 @@ Used to lookup booking information for users.
 * GET - http://bookings.dev/bookings : Get all bookings
 * GET - http://bookings.dev/bookings/{id} : Get booking by id
 * POST - http://bookings.dev/bookings : Create booking
+
+# Cinema - Example of Microservices in Go with Docker and MongoDB
+* Forked from [mmorejon/microservices-docker-go-mongodb](https://github.com/mmorejon/microservices-docker-go-mongodb)
+* Changelog:
+  * Make the domain name suffix configurable. Defaults to .dev for use with existing dnsmasq resolver as described in [Local docker development with virtual hosts](https://coderwall.com/p/qknu2g/local-docker-development-with-virtual-hosts)
+  * Fix some movie IDs in the bookings and showtimes sample data (backup/*.bson)
+  * Add URL handlers for /path/{id} for all objects
+  * Add query functionality
+
 
 ### Significant Resources
 
