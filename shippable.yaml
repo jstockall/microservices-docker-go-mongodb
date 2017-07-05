@@ -18,12 +18,14 @@ build:
     - go get gopkg.in/mgo.v2
     - go get github.com/gorilla/mux
     - go get github.com/jstemmer/go-junit-report
+    - go get github.com/t-yuki/gocover-cobertura
     - mongorestore -d users -c users --drop backup/users/users/users.bson
     - mkdir -p $GOPATH/src/github.com/mmorejon/cinema
     - cp -a * $GOPATH/src/github.com/mmorejon/cinema
-    - go test -c github.com/mmorejon/cinema/users/controllers -o users/controllers.test
+    - go test -c github.com/mmorejon/cinema/users/controllers -o users/controllers.test -cover
     - cd users
-    - ./controllers.test -test.v 2>&1 | $GOPATH/bin/go-junit-report > ../shippable/testresults/users-controllers.xml
+    - ./controllers.test -test.v -test.coverprofile=coverage.out 2>&1 | $GOPATH/bin/go-junit-report > ../shippable/testresults/users-controllers.xml
+    - $GOPATH/bin/gocover-cobertura < coverage.out > ../shippable/codecoverage/coverage.xml
   post_ci:
   on_success:
   on_failure:
