@@ -1,11 +1,14 @@
 // userController_test.go
+// See https://elithrar.github.io/article/testing-http-handlers-go/
+// https://medium.com/@matryer/5-simple-tips-and-tricks-for-writing-unit-tests-in-golang-619653f90742
 package controllers
 
 import (
     "net/http"
     "net/http/httptest"
     "testing"
-
+    "reflect"
+	  "encoding/json"
     "github.com/mmorejon/cinema/users/common"
 )
 
@@ -34,8 +37,20 @@ func TestGetUsers(t *testing.T) {
     }
 
     // Check the response body is what we expect.
-    expected := `{"data":[{"id":"58b1ec0ccd02960006e0fcde","name":"Jane","lastname":"Doe"},{"id":"58b1ec79cd02960006e0fcdf","name":"John","lastname":"Doe"},{"id":"58b1ebf7cd02960006e0fcdd","name":"Billy","lastname":"Bob"}]}`
-    if rr.Body.String() != expected {
-        t.Errorf("handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
+    var actual map[string]interface{}
+    err = json.Unmarshal([]byte(rr.Body.String()), &actual)
+    if err != nil {
+      t.Error(err)
+    }
+
+    var expected map[string]interface{}
+    s := `{"data":[{"id":"58b1ec0ccd02960006e0fcde","name":"Jane","lastname":"Doe"},{"id":"58b1ec79cd02960006e0fcdf","name":"John","lastname":"Doe"},{"id":"58b1ebf7cd02960006e0fcdd","name":"Billy","lastname":"Bob"}]}`
+    err = json.Unmarshal([]byte(s), &expected)
+    if err != nil {
+      t.Error(err)
+    }
+
+    if reflect.DeepEqual(actual, expected) {
+        t.Errorf("handler returned unexpected body: got %v want %v", actual, expected)
     }
 }
