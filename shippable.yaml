@@ -14,6 +14,7 @@ matrix:
 build:
 
   ci:
+    - mkdir -p shippable/testresults
     - go get gopkg.in/mgo.v2
     - go get github.com/gorilla/mux
     - go get github.com/jstemmer/go-junit-report
@@ -22,7 +23,7 @@ build:
     - cp -a * $GOPATH/src/github.com/mmorejon/cinema
     - go test -c github.com/mmorejon/cinema/users/controllers -o users/controllers.test
     - cd users
-    - ./controllers.test -test.v 2>&1 | go-junit-report > ../shippable/testresult/users-controllers.xml
+    - ./controllers.test -test.v 2>&1 | $GOPATH/bin/go-junit-report > ../shippable/testresults/users-controllers.xml
   post_ci:
   on_success:
   on_failure:
