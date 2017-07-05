@@ -49,8 +49,7 @@ or setup dnsmasq with [Local docker development with virtual hosts](https://code
   * *curl bookings.dev/bookings*
 
 ## Kubernetes
-* Set your kubernetes context
- * *kubectl config use-context my-context*
+* Set your kubernetes context *kubectl config use-context my-context*
 * Create a namespace for the app *kubectl create namespace cinema*
 * Deploy the services *kubectl create -f k8s.yaml --namespace=cinema --record*
 * (Optional) Load database with sample data
