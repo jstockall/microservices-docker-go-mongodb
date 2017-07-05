@@ -29,10 +29,10 @@ build:
   on_failure:
 
 integrations:
- notifications:
-    integrationName: email
-    type: email
-    recipients:
-     - jstockall@embotics.com
-    sendConsoleLogs: true
-    sendCoverageReports: false
+  notifications:
+    - integrationName: email
+      type: email
+      recipients:
+        - jstockall@embotics.com
+      sendConsoleLogs: true
+      sendCoverageReports: false
