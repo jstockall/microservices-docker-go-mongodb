@@ -25,14 +25,8 @@ build:
     - cd users
     - ./controllers.test -test.v 2>&1 | go-junit-report > ../shippable/testresult/users-controllers.xml
   post_ci:
-    - #command1
-    - #command2
   on_success:
-    - #command1
-    - #command2
   on_failure:
-    - #command1
-    - #command2
 
 integrations:
  notifications:
