@@ -36,9 +36,9 @@ build:
 
 integrations:
  notifications:
-   - integrationName: email
-      type: email
-      recipients:
-        - jstockall@embotics.com
-      sendConsoleLogs: true
-      sendCoverageReports: false
+    integrationName: email
+    type: email
+    recipients:
+     - jstockall@embotics.com
+    sendConsoleLogs: true
+    sendCoverageReports: false
