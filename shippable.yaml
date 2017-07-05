@@ -21,7 +21,9 @@ build:
     - cp -a * $GOPATH/src/github.com/mmorejon/cinema
     - mongorestore -d users -c users --drop backup/users/users/users.bson
     - cd users
-    - go test github.com/mmorejon/cinema/users -v | $GOPATH/bin/go-junit-report > ../shippable/testresults/users.xml
+    - go test -c github.com/mmorejon/cinema/users -o users.test
+    - ./users.test -test.v | $GOPATH/bin/go-junit-report > ../shippable/testresults/users.xml
+# go test github.com/mmorejon/cinema/users -v | $GOPATH/bin/go-junit-report > ../shippable/testresults/users.xml
   post_ci:
   on_success:
   on_failure:
