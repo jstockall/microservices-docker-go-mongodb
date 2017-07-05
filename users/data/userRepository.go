@@ -19,7 +19,7 @@ func (r *UserRepository) Create(user *models.User) error {
 
 func (r *UserRepository) GetAll() []models.User {
 	var users []models.User
-	iter := r.C.Find(nil).Iter()
+	iter := r.C.Find(nil).Sort("lastname", "name").Iter()
 	result := models.User{}
 	for iter.Next(&result) {
 		users = append(users, result)

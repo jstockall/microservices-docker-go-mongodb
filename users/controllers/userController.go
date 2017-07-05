@@ -3,7 +3,6 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
-
 	"github.com/gorilla/mux"
 	"github.com/mmorejon/cinema/users/common"
 	"github.com/mmorejon/cinema/users/data"
