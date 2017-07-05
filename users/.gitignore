@@ -24,3 +24,7 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+coverage.out
+coverage.xml
+controllers.test
