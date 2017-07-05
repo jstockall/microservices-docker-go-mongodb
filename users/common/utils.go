@@ -67,16 +67,7 @@ var session *mgo.Session
 // Get database session
 func GetSession() *mgo.Session {
 	if session == nil {
-		var err error
-		session, err = mgo.DialWithInfo(&mgo.DialInfo{
-			Addrs:    []string{AppConfig.MongoDBHost},
-			Username: AppConfig.DBUser,
-			Password: AppConfig.DBPwd,
-			Timeout:  60 * time.Second,
-		})
-		if err != nil {
-			log.Fatalf("[GetSession]: %s\n", err)
-		}
+		createDbSession()
 	}
 	return session
 }
@@ -84,6 +75,7 @@ func GetSession() *mgo.Session {
 // Create database session
 func createDbSession() {
 	var err error
+	log.Printf("Connecting to MongoDB host [%s]", AppConfig.MongoDBHost)
 	session, err = mgo.DialWithInfo(&mgo.DialInfo{
 		Addrs:    []string{AppConfig.MongoDBHost},
 		Username: AppConfig.DBUser,
@@ -92,5 +84,7 @@ func createDbSession() {
 	})
 	if err != nil {
 		log.Fatalf("[createDbSession]: %s\n", err)
+	} else {
+		log.Printf("Connected")
 	}
 }

@@ -1,0 +1,44 @@
+language: go
+
+go:
+  - 1.6
+
+services:
+  - mongodb
+
+env:
+  - GOPATH=`pwd` DATABASE_HOST=127.0.0.1
+
+matrix:
+
+build:
+
+  ci:
+    - go get gopkg.in/mgo.v2
+    - go get github.com/gorilla/mux
+    - go get github.com/jstemmer/go-junit-report
+    - mongorestore -d users -c users --drop backup/users/users/users.bson
+    - mkdir -p src/github.com/mmorejon
+    - ln -s `pwd` src/github.com/mmorejon/cinema
+    - mkdir -p shippable/testresults
+    - go test -c github.com/mmorejon/cinema/users/controllers
+    - cd users
+    - ./controllers.test -test.v 2>&1 | go-junit-report > ../shippable/testresult/users-controllers.xml
+  post_ci:
+    - #command1
+    - #command2
+  on_success:
+    - #command1
+    - #command2
+  on_failure:
+    - #command1
+    - #command2
+
+integrations:
+ notifications:
+   - integrationName: email
+      type: email
+      recipients:
+        - jstockall@embotics.com
+      sendConsoleLogs: true
+      sendCoverageReports: false

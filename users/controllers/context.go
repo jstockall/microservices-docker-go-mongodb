@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"gopkg.in/mgo.v2"
 
 	"github.com/mmorejon/cinema/users/common"
@@ -18,6 +19,7 @@ func (c *Context) Close() {
 
 // Returns mgo.collection for the given name
 func (c *Context) DbCollection(name string) *mgo.Collection {
+	log.Printf("Returning collection [%s.%s]", common.AppConfig.Database, name)
 	return c.MongoSession.DB(common.AppConfig.Database).C(name)
 }
 
