@@ -8,11 +8,8 @@ services:
 
 env:
   - DATABASE_HOST=127.0.0.1
-
-matrix:
-
+  - GCR_REPO=gcr.io/shippable-174014/microservices-docker-go-mongodb
 build:
-
   ci:
     - go get gopkg.in/mgo.v2
     - go get github.com/gorilla/mux
@@ -22,9 +19,9 @@ build:
     - mongorestore -d users -c users --drop backup/users/users/users.bson
     - cd users
     - go test github.com/mmorejon/cinema/users -v | $GOPATH/bin/go-junit-report > ../shippable/testresults/users.xml
-# go test -c github.com/mmorejon/cinema/users -o users.test
-# ./users.test -test.v | $GOPATH/bin/go-junit-report > ../shippable/testresults/users.xml 
   post_ci:
+    - docker build -t $GCR_REPO:$BRANCH.$BUILD_NUMBER .
+    - docker push $GCR_REPO:$BRANCH.$BUILD_NUMBER
   on_success:
   on_failure:
 
@@ -36,3 +33,6 @@ integrations:
         - jstockall@embotics.com
       sendConsoleLogs: true
       sendCoverageReports: false
+  hub:
+    - integrationName: shipDH
+      type: gcr
