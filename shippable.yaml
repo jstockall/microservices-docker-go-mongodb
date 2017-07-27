@@ -8,8 +8,6 @@ services:
 
 env:
   - DATABASE_HOST=127.0.0.1
-  global:
-    - GCR_REPO=gcr.io/shippable-174014/microservices-docker-go-mongodb
 
 build:
   ci:
@@ -22,8 +20,8 @@ build:
     - cd users
     - go test github.com/mmorejon/cinema/users -v | $GOPATH/bin/go-junit-report > ../shippable/testresults/users.xml
   post_ci:
-    - docker build -t $GCR_REPO:$BRANCH.$BUILD_NUMBER .
-    - docker push $GCR_REPO:$BRANCH.$BUILD_NUMBER
+    - docker build -t gcr.io/shippable-174014/microservices-docker-go-mongodb:$BRANCH.$BUILD_NUMBER .
+    - docker push gcr.io/shippable-174014/microservices-docker-go-mongodb:$BRANCH.$BUILD_NUMBER
   on_success:
   on_failure:
 
