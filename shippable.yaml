@@ -8,7 +8,9 @@ services:
 
 env:
   - DATABASE_HOST=127.0.0.1
-  - GCR_REPO=gcr.io/shippable-174014/microservices-docker-go-mongodb
+  global:
+    - GCR_REPO=gcr.io/shippable-174014/microservices-docker-go-mongodb
+
 build:
   ci:
     - go get gopkg.in/mgo.v2
