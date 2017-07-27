@@ -34,5 +34,5 @@ integrations:
       sendConsoleLogs: true
       sendCoverageReports: false
   hub:
-    - integrationName: gcr
+    - integrationName: shipDH
       type: gcr
