@@ -8,8 +8,7 @@ services:
 
 env:
   - DATABASE_HOST=127.0.0.1
-  global:
-    GCR_REPO=gcr.io/shippable-174014/cinema
+  - GCR_REPO=gcr.io/shippable-174014/cinema
 
 build:
   ci:
