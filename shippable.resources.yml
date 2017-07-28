@@ -1,0 +1,56 @@
+resources:
+  - name: cinema-users-image
+    type: image
+    flags:
+      - deploy-gke-cinema
+    integration: gcr
+    pointer:
+      sourceName: "gcr.io/shippable-174014/cinema-users"
+    seed:
+      versionName: "latest"
+
+  - name: cinema-db-image
+    type: image
+    flags:
+      - deploy-gke-cinema
+    integration: dh
+    pointer:
+      sourceName: "mongo"
+    seed:
+      versionName: "3.3"
+
+  - name: cinema-users-docker-options
+    type: dockerOptions
+    flags:
+      - deploy-gke-cinema
+    version:
+      memory: 100
+      portMappings:
+        - 80:80
+
+
+  - name: cinema-users-params
+    type: params
+    flags:
+      - deploy-gke-cinema
+    version:
+      params:
+        PORT: 80
+        ENVIRONMENT: "dev"
+
+  - name: cinema-replicas
+    type: replicas
+    flags:
+      - deploy-gke-cinema
+    version:
+      count: 1
+
+  - name: cinema-gke-cluster
+    type: cluster
+    flags:
+      - deploy-gke-cinema
+    integration: GCE
+    pointer:
+      sourceName : "cluster-1" #name of the cluster to which we are deploying
+      region: "us-central1-a"
+      namespace: "cinema"

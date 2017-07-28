@@ -1,0 +1,32 @@
+jobs:
+  - name: cinema_runCI
+    type: runCI
+    flags:
+      - cinema
+    steps:
+      - OUT: cinema-users-image
+
+  - name: cinema-manifest
+    type: manifest
+    flags:
+      - cinema
+    steps:
+     - IN: cinema-users-image
+     - IN: cinema-db-image
+     - IN: cinema-users-docker-options
+       applyTo:
+         - cinema-users-image
+     - IN: cinema-users-params
+       applyTo:
+         - cinema-users-image
+     - IN: cinema-replicas
+
+  - name: cinema-deploy
+    type: deploy
+    flags:
+      - cinema
+    steps:
+      - IN: cinema-manifest
+      - IN: cinema-gke-cluster
+      - TASK: managed
+        deployMethod: replace
