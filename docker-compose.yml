@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 services:
   proxy:
     image: jwilder/nginx-proxy
@@ -9,7 +9,9 @@ services:
       - "80:80"
 
   movies:
-    build: ./movies
+    build:
+      context: .
+      dockerfile: ./movies/Dockerfile
     image: stockallj/cinema-movies
     container_name: cinema-movies
     depends_on:
@@ -20,9 +22,16 @@ services:
     environment:
       VIRTUAL_HOST: movies.dev
       DATABASE_HOST: db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://movies.dev/health"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
 
   bookings:
-    build: ./bookings
+    build:
+      context: .
+      dockerfile: ./bookings/Dockerfile
     image: stockallj/cinema-bookings
     container_name: cinema-bookings
     depends_on:
@@ -33,9 +42,16 @@ services:
     environment:
       VIRTUAL_HOST: bookings.dev
       DATABASE_HOST: db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://bookings.dev/health"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
 
   showtimes:
-    build: ./showtimes
+    build:
+      context: .
+      dockerfile: ./showtimes/Dockerfile
     image: stockallj/cinema-showtimes
     container_name: cinema-showtimes
     depends_on:
@@ -46,9 +62,16 @@ services:
     environment:
       VIRTUAL_HOST: showtimes.dev
       DATABASE_HOST: db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://showtimes.dev/health"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
 
   users:
-    build: ./users
+    build:
+      context: .
+      dockerfile: ./users/Dockerfile
     image: stockallj/cinema-users
     container_name: cinema-users
     depends_on:
@@ -59,6 +82,11 @@ services:
     environment:
       VIRTUAL_HOST: users.dev
       DATABASE_HOST: db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://users.dev/health"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
 
   backup:
     build: ./backup

@@ -9,7 +9,7 @@ import (
     "testing"
     "os"
     "github.com/gorilla/mux"
-    "github.com/mmorejon/cinema/users/common"
+    "github.com/mmorejon/cinema/common"
     "github.com/mmorejon/cinema/users/routers"
 )
 

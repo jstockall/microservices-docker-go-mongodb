@@ -5,15 +5,21 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/mmorejon/cinema/movies/common"
+	"github.com/mmorejon/cinema/common"
 	"github.com/mmorejon/cinema/movies/data"
 	"gopkg.in/mgo.v2"
 )
 
+// Handler for HTTP Get - "/health"
+// Returns 200 if we can contact the DB
+func HealthCheck(w http.ResponseWriter, r *http.Request) {
+	common.HealthCheck(w)
+}
+
 // Handler for HTTP Get - "/movies"
 // Returns all Movie documents
 func GetMovies(w http.ResponseWriter, r *http.Request) {
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("movies")
 	repo := &data.MovieRepository{c}
@@ -41,7 +47,7 @@ func CreateMovie(w http.ResponseWriter, r *http.Request) {
 	movie := &dataResourse.Data
 
 	// create new context
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("movies")
 	// Insert a movie document
@@ -65,7 +71,7 @@ func GetMovieById(w http.ResponseWriter, r *http.Request) {
 	id := vars["id"]
 
 	// create new context
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("movies")
 	repo := &data.MovieRepository{c}
@@ -101,7 +107,7 @@ func DeleteMovie(rw http.ResponseWriter, req *http.Request) {
 	id := vars["id"]
 
 	// Create new context
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("movies")
 	repo := &data.MovieRepository{c}

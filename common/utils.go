@@ -5,9 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
-
-	"gopkg.in/mgo.v2"
+	"fmt"
 )
 
 type (
@@ -24,6 +22,27 @@ type (
 	}
 )
 
+// Handler for HTTP Get - "/health"
+// Returns 200 if we can contact the DB
+func HealthCheck(w http.ResponseWriter) {
+	// Create new context
+	context := NewContext()
+	defer context.Close()
+	err := context.Ping()
+
+	var status []byte
+	if err != nil {
+		status = []byte(fmt.Sprintf(`{"status": "DOWN", "reason": "%s"}`, err))
+	} else {
+		status = []byte(`{"status": "UP"}`)
+	}
+
+	// Send response back
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(status)
+}
+
 func DisplayAppError(w http.ResponseWriter, handlerError error, message string, code int) {
 	errObj := appError{
 		Error:      handlerError.Error(),
@@ -37,6 +56,7 @@ func DisplayAppError(w http.ResponseWriter, handlerError error, message string, 
 		w.Write(j)
 	}
 }
+
 
 // AppConfig holds the configuration values from config.json file
 var AppConfig configuration
@@ -58,33 +78,5 @@ func initConfig() {
 	if dbHost != "" {
 		log.Printf("Setting DB host to " + dbHost)
 		AppConfig.MongoDBHost = dbHost
-	}
-}
-
-// Session holds the mongodb session for database access
-var session *mgo.Session
-
-// Get database session
-func GetSession() *mgo.Session {
-	if session == nil {
-		createDbSession()
-	}
-	return session
-}
-
-// Create database session
-func createDbSession() {
-	var err error
-	log.Printf("Connecting to MongoDB host [%s]", AppConfig.MongoDBHost)
-	session, err = mgo.DialWithInfo(&mgo.DialInfo{
-		Addrs:    []string{AppConfig.MongoDBHost},
-		Username: AppConfig.DBUser,
-		Password: AppConfig.DBPwd,
-		Timeout:  5 * time.Second,
-	})
-	if err != nil {
-		log.Fatalf("[createDbSession]: %s\n", err)
-	} else {
-		log.Printf("Connected")
 	}
 }

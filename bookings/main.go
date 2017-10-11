@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/mmorejon/cinema/bookings/common"
+	"github.com/mmorejon/cinema/common"
 	"github.com/mmorejon/cinema/bookings/routers"
 )
 

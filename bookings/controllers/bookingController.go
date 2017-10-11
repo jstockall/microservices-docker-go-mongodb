@@ -5,11 +5,17 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/mmorejon/cinema/bookings/common"
+	"github.com/mmorejon/cinema/common"
 	"github.com/mmorejon/cinema/bookings/data"
 	"github.com/mmorejon/cinema/bookings/models"
 	"gopkg.in/mgo.v2"
 )
+
+// Handler for HTTP Get - "/health"
+// Returns 200 if we can contact the DB
+func HealthCheck(w http.ResponseWriter, r *http.Request) {
+	common.HealthCheck(w)
+}
 
 // Handler for HTTP Post - "/bookins"
 // Create a new Booking document
@@ -23,7 +29,7 @@ func CreateBooking(w http.ResponseWriter, r *http.Request) {
 	}
 	booking := &dataResource.Data
 	// Create new context
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("bookings")
 	// Create Booking
@@ -43,7 +49,7 @@ func CreateBooking(w http.ResponseWriter, r *http.Request) {
 
 func GetBookings(w http.ResponseWriter, r *http.Request) {
 	// Create new context
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("bookings")
 	repo := &data.BookingRepository{c}
@@ -80,7 +86,7 @@ func GetBookingById(w http.ResponseWriter, r *http.Request) {
 	id := vars["id"]
 
 	// create new context
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("bookings")
 	repo := &data.BookingRepository{c}
@@ -116,7 +122,7 @@ func DeleteBooking(w http.ResponseWriter, r *http.Request) {
 	id := vars["id"]
 
 	// Create new context
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("bookings")
 

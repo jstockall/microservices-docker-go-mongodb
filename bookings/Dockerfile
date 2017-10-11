@@ -6,7 +6,8 @@ RUN go get gopkg.in/mgo.v2
 RUN go get github.com/gorilla/mux
 
 # copy the local package files to the container workspace
-ADD . /go/src/github.com/mmorejon/cinema/bookings
+ADD ./common /go/src/github.com/mmorejon/cinema/common
+ADD ./bookings /go/src/github.com/mmorejon/cinema/bookings
 
 # Setting up working directory
 WORKDIR /go/src/github.com/mmorejon/cinema/bookings

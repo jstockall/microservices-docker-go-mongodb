@@ -5,17 +5,23 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/mmorejon/cinema/showtimes/common"
+	"github.com/mmorejon/cinema/common"
 	"github.com/mmorejon/cinema/showtimes/data"
 	"github.com/mmorejon/cinema/showtimes/models"
 	"gopkg.in/mgo.v2"
 )
 
+// Handler for HTTP Get - "/health"
+// Returns 200 if we can contact the DB
+func HealthCheck(w http.ResponseWriter, r *http.Request) {
+	common.HealthCheck(w)
+}
+
 // Handler for HTTP Get - "/showtimes"
 // Returns all Showtime documents
 func GetShowTimes(w http.ResponseWriter, r *http.Request) {
 	// Create new context
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("showtimes")
 	repo := &data.ShowTimeRepository{c}
@@ -54,7 +60,7 @@ func CreateShowTime(w http.ResponseWriter, r *http.Request) {
 	}
 	showtime := &dataResource.Data
 	// Create new context
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("showtimes")
 	// Create ShowTime
@@ -78,7 +84,7 @@ func GetShowTimeById(w http.ResponseWriter, r *http.Request) {
 	id := vars["id"]
 
 	// Create new context
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("showtimes")
 	repo := &data.ShowTimeRepository{c}
@@ -109,7 +115,7 @@ func DeleteShowTime(w http.ResponseWriter, r *http.Request) {
 	id := vars["id"]
 
 	// Create new context
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("showtimes")
 
@@ -143,7 +149,7 @@ func UpdateShowTime(w http.ResponseWriter, r *http.Request) {
 
 	showtime := &dataResource.Data
 	// Create new context
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("showtimes")
 	// Create ShowTime

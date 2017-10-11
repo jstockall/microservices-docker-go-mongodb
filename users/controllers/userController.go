@@ -1,11 +1,10 @@
 package controllers
 
 import (
-	"fmt"
 	"encoding/json"
 	"net/http"
 	"github.com/gorilla/mux"
-	"github.com/mmorejon/cinema/users/common"
+	"github.com/mmorejon/cinema/common"
 	"github.com/mmorejon/cinema/users/data"
 	"gopkg.in/mgo.v2"
 )
@@ -13,29 +12,14 @@ import (
 // Handler for HTTP Get - "/health"
 // Returns 200 if we can contact the DB
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
-	// Create new context
-	context := NewContext()
-	defer context.Close()
-	err := context.Ping()
-
-	var status []byte
-	if err != nil {
-		status = []byte(fmt.Sprintf(`{"status": "DOWN", "reason": "%s"}`, err))
-	} else {
-		status = []byte(`{"status": "UP"}`)
-	}
-
-	// Send response back
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(status)
+	common.HealthCheck(w)
 }
 
 // Handler for HTTP Get - "/users"
 // Returns all User documents
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	// Create new context
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("users")
 	repo := &data.UserRepository{c}
@@ -64,7 +48,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 	user := &dataResource.Data
 	// Create new context
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("users")
 	// Create User
@@ -95,7 +79,7 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	id := vars["id"]
 
 	// Create new context
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("users")
 
@@ -124,7 +108,7 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
 	id := vars["id"]
 
 	// create new context
-	context := NewContext()
+	context := common.NewContext()
 	defer context.Close()
 	c := context.DbCollection("users")
 	repo := &data.UserRepository{c}
