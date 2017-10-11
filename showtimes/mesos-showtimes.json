@@ -1,5 +1,5 @@
 {
-    "id": "cinema/showtimes",
+    "id": "/cinema/showtimes",
     "container": {
       "type": "DOCKER",
       "docker": {

@@ -1,18 +1,18 @@
 {
-    "id": "cinema/users",
+    "id": "/cinema/backup",
     "container": {
       "type": "DOCKER",
       "docker": {
-          "image": "stockallj/cinema-users:201702270850",
+          "image": "stockallj/cinema-backup:201703071608",
           "network": "BRIDGE",
           "portMappings": [
             {
               "protocol": "tcp",
               "containerPort": 8080,
               "labels": {
-                "VIP_0": "/users:80"
+                "VIP_0": "/backup:80"
               },
-              "name": "users-vip"
+              "name": "backup-vip"
             }
           ]
       }
@@ -28,7 +28,7 @@
     ],
     "healthChecks": [{
         "protocol": "HTTP",
-        "path": "/users",
+        "path": "/",
         "portIndex": 0,
         "timeoutSeconds": 2,
         "gracePeriodSeconds": 15,

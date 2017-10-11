@@ -1,0 +1,229 @@
+{
+  "id": "/cinema",
+  "apps": [
+    {
+      "id": "/cinema/db",
+      "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "mongo:3.3",
+            "network": "BRIDGE",
+            "portMappings": [
+              {
+                "protocol": "tcp",
+                "containerPort": 27017,
+                "labels": {
+                  "VIP_0": "/db:27017"
+                },
+                "name": "db-vip"
+              }
+            ]
+        }
+      },
+      "acceptedResourceRoles": ["*"],
+      "instances": 1,
+      "cpus": 0.5,
+      "mem": 1024,
+      "disk": 2048,
+      "healthChecks": [{
+          "protocol": "HTTP",
+          "path": "/health",
+          "portIndex": 0,
+          "gracePeriodSeconds": 15,
+          "intervalSeconds": 10,
+          "timeoutSeconds": 20,
+          "maxConsecutiveFailures": 3
+      }]
+    },
+    {
+      "id": "/cinema/backup",
+      "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "stockallj/cinema-backup:201703092206",
+            "network": "BRIDGE",
+            "portMappings": [
+              {
+                "protocol": "tcp",
+                "containerPort": 8080,
+                "labels": {
+                  "VIP_0": "/backup:80"
+                },
+                "name": "backup-vip"
+              }
+            ]
+        }
+      },
+      "acceptedResourceRoles": ["*"],
+      "instances": 1,
+      "cpus": 0.25,
+      "mem": 512,
+      "disk": 0,
+      "env": { "DATABASE_HOST":"db.marathon.l4lb.thisdcos.directory" },
+      "dependencies": [
+        "/cinema/db"
+      ],
+      "healthChecks": [{
+          "protocol": "HTTP",
+          "path": "/",
+          "portIndex": 0,
+          "timeoutSeconds": 2,
+          "gracePeriodSeconds": 15,
+          "intervalSeconds": 3,
+          "maxConsecutiveFailures": 2
+      }]
+    },
+    {
+      "id": "/cinema/users",
+      "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "stockallj/cinema-users:201702270850",
+            "network": "BRIDGE",
+            "portMappings": [
+              {
+                "protocol": "tcp",
+                "containerPort": 8080,
+                "labels": {
+                  "VIP_0": "/users:80"
+                },
+                "name": "users-vip"
+              }
+            ]
+        }
+      },
+      "acceptedResourceRoles": ["*"],
+      "instances": 1,
+      "cpus": 0.25,
+      "mem": 512,
+      "disk": 0,
+      "env": { "DATABASE_HOST":"db.marathon.l4lb.thisdcos.directory" },
+      "dependencies": [
+        "/cinema/db"
+      ],
+      "healthChecks": [{
+          "protocol": "HTTP",
+          "path": "/users",
+          "portIndex": 0,
+          "timeoutSeconds": 2,
+          "gracePeriodSeconds": 15,
+          "intervalSeconds": 3,
+          "maxConsecutiveFailures": 2
+      }]
+    },
+    {
+      "id": "/cinema/showtimes",
+      "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "stockallj/cinema-showtimes:201702270850",
+            "network": "BRIDGE",
+            "portMappings": [
+              {
+                "protocol": "tcp",
+                "containerPort": 8080,
+                "labels": {
+                  "VIP_0": "/showtimes:80"
+                },
+                "name": "showtimes-vip"
+              }
+            ]
+        }
+      },
+      "acceptedResourceRoles": ["*"],
+      "instances": 1,
+      "cpus": 0.25,
+      "mem": 512,
+      "disk": 0,
+      "env": { "DATABASE_HOST":"db.marathon.l4lb.thisdcos.directory" },
+      "dependencies": [
+        "/cinema/db"
+      ],
+      "healthChecks": [{
+          "protocol": "HTTP",
+          "path": "/showtimes",
+          "portIndex": 0,
+          "timeoutSeconds": 2,
+          "gracePeriodSeconds": 15,
+          "intervalSeconds": 3,
+          "maxConsecutiveFailures": 2
+      }]
+    },
+    {
+      "id": "/cinema/movies",
+      "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "stockallj/cinema-movies:201702270850",
+            "network": "BRIDGE",
+            "portMappings": [
+              {
+                "protocol": "tcp",
+                "containerPort": 8080,
+                "labels": {
+                  "VIP_0": "/movies:80"
+                },
+                "name": "movies-vip"
+              }
+            ]
+        }
+      },
+      "acceptedResourceRoles": ["*"],
+      "instances": 1,
+      "cpus": 0.25,
+      "mem": 512,
+      "disk": 0,
+      "env": { "DATABASE_HOST":"db.marathon.l4lb.thisdcos.directory" },
+      "dependencies": [
+        "/cinema/db"
+      ],
+      "healthChecks": [{
+          "protocol": "HTTP",
+          "path": "/movies",
+          "portIndex": 0,
+          "timeoutSeconds": 2,
+          "gracePeriodSeconds": 15,
+          "intervalSeconds": 3,
+          "maxConsecutiveFailures": 2
+      }]
+    },
+    {
+      "id": "/cinema/bookings",
+      "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "stockallj/cinema-bookings:201702270850",
+            "network": "BRIDGE",
+            "portMappings": [
+              {
+                "protocol": "tcp",
+                "containerPort": 8080,
+                "labels": {
+                  "VIP_0": "/bookings:80"
+                },
+                "name": "bookings-vip"
+              }
+            ]
+        }
+      },
+      "acceptedResourceRoles": ["*"],
+      "instances": 1,
+      "cpus": 0.25,
+      "mem": 512,
+      "disk": 0,
+      "env": { "DATABASE_HOST":"db.marathon.l4lb.thisdcos.directory" },
+      "dependencies": [
+        "/cinema/db"
+      ],
+      "healthChecks": [{
+          "protocol": "HTTP",
+          "path": "/bookings",
+          "portIndex": 0,
+          "timeoutSeconds": 2,
+          "gracePeriodSeconds": 15,
+          "intervalSeconds": 3,
+          "maxConsecutiveFailures": 2
+      }]
+    }
+  ]
+}
