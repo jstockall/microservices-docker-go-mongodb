@@ -11,6 +11,11 @@ type Context struct {
 	MongoSession *mgo.Session
 }
 
+// Test database connectivity
+func (c *Context) Ping() error {
+	return c.MongoSession.Ping()
+}
+
 // Close mgo.Session
 func (c *Context) Close() {
 	c.MongoSession.Close()

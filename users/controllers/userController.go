@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"encoding/json"
 	"net/http"
 	"github.com/gorilla/mux"
@@ -8,6 +9,27 @@ import (
 	"github.com/mmorejon/cinema/users/data"
 	"gopkg.in/mgo.v2"
 )
+
+// Handler for HTTP Get - "/health"
+// Returns 200 if we can contact the DB
+func HealthCheck(w http.ResponseWriter, r *http.Request) {
+	// Create new context
+	context := NewContext()
+	defer context.Close()
+	err := context.Ping()
+
+	var status []byte
+	if err != nil {
+		status = []byte(fmt.Sprintf(`{"status": "DOWN", "reason": "%s"}`, err))
+	} else {
+		status = []byte(`{"status": "UP"}`)
+	}
+
+	// Send response back
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(status)
+}
 
 // Handler for HTTP Get - "/users"
 // Returns all User documents
@@ -47,7 +69,12 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	c := context.DbCollection("users")
 	// Create User
 	repo := &data.UserRepository{c}
-	repo.Create(user)
+	err = repo.Create(user)
+	if err != nil {
+		common.DisplayAppError(w, err, "An unexpected error has occurred", 500)
+		return
+	}
+
 	// Create response data
 	j, err := json.Marshal(dataResource)
 	if err != nil {
