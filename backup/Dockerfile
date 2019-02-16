@@ -1,5 +1,5 @@
 # golang image where workspace (GOPATH) configured at /go.
-FROM golang:1.6
+FROM golang:1.7
 
 # Add MongoDB tools
 RUN apt-get update && apt-get install -y mongodb-clients && rm -rf /var/lib/apt/lists/*
