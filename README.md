@@ -184,3 +184,4 @@ Used to lookup booking information for users.
 * [Umer Mansoor - Cinema](https://github.com/umermansoor/microservices)
 * [Local docker development with virtual hosts](https://coderwall.com/p/qknu2g/local-docker-development-with-virtual-hosts)
 * [Automated Nginx Reverse Proxy for Docker by Jason Wilder](https://github.com/jwilder/nginx-proxy)
+
